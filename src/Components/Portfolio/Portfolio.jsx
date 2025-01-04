@@ -4,7 +4,7 @@ import port_2 from "../../assets/port2.png";
 import port_3 from "../../assets/port3.png";
 
 export default function Portfolio() {
-  const [display, setDisplay] = useState("d-none");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [images, setImages] = useState([
     { src: port_1, alt: "Portfolio Image 1" },
     { src: port_2, alt: "Portfolio Image 2" },
@@ -16,22 +16,19 @@ export default function Portfolio() {
   const [currentImage, setCurrentImage] = useState(null);
 
   const handleModalDisplay = (index) => {
-    setDisplay("d-flex");
-    const newImages = structuredClone(images);
-    const selectedImage = newImages[index];
-    setCurrentImage(selectedImage);
-    
+    setIsModalOpen(true);
+    setCurrentImage(images[index]);
   };
 
   const handleCloseModal = () => {
-    setDisplay("d-none");
+    setIsModalOpen(false);
     setCurrentImage(null);
   };
 
   useEffect(() => {
     document.title = "Portfolio";
   }, []);
-  
+
   return (
     <>
       <div className="flex-grow-1 d-flex mt-5 pt-5 align-items-center flex-column w-100 bg-white">
@@ -59,14 +56,20 @@ export default function Portfolio() {
             ))}
           </div>
         </div>
-        <div
-          className={`${display} modal-layer`}
-          onClick={() => handleCloseModal()}
-        >
-          <div className="modal-inner" onClick={(e) => e.stopPropagation()}>
-            <img src={currentImage?.src} alt={currentImage?.alt} className="img-fluid" />
+        {isModalOpen && (
+          <div
+            className="modal-layer d-flex justify-content-center align-items-center"
+            onClick={handleCloseModal}
+          >
+            <div className="modal-inner" onClick={(e) => e.stopPropagation()}>
+              <img
+                src={currentImage?.src}
+                alt={currentImage?.alt}
+                className="img-fluid"
+              />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );
